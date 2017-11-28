@@ -1,0 +1,4 @@
+[core]
+	autocrlf = input
+[gui]
+	recentrepo = G:/Assignm/GitPortable/Data/home
