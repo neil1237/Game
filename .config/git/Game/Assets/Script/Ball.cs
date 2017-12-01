@@ -5,17 +5,13 @@ using UnityEngine.UI;
 
 public class Ball : MonoBehaviour {
     bool gameStarted = false;
-
-    public Text textComponent;
-
-    int score1 = 0;
-    int score2 = 0;
-
-    public Transform Player2Score;
-    public Transform Player1Score;
+    public Scores scores;
+    private Rigidbody2D rb;
+    public static bool WasGoal { get; private set; }
     private void Start()
     {
-        transform.position = new Vector3(0.67f,-1.54f,-1.13f);
+        rb = GetComponent<Rigidbody2D>();
+        WasGoal = false;
     }
 
     void Update()
@@ -25,19 +21,37 @@ public class Ball : MonoBehaviour {
             gameStarted = true;
             this.GetComponent<Rigidbody2D>().velocity = new Vector2(5f, 5f);
         }
-        if (transform.position.x < Player2Score.transform.position.x)
-        {
-            transform.position = new Vector3(0.67f, -1.54f, -1.13f);
-            score1++;
-            textComponent.text = "Changing" + score1;
-        }
-        if (transform.position.x > Player1Score.transform.position.x)
-        {
-            transform.position = new Vector3(0.67f, -1.54f, -1.13f);
-            score2++;
-            textComponent.text = "Changing" + score2;
-        }
-        
-    
     }
+
+    private void OnTriggerEnter2D(Collider2D value)
+    {
+        if (!WasGoal)
+        {
+            if (value.tag == "Player1Score")
+            {
+                scores.Increment(Scores.Score.Player1Score);
+                WasGoal = true;
+                StartCoroutine(ResetBall());
+            }
+            else if (value.tag == "Player2Score")
+            {
+                scores.Increment(Scores.Score.Player2Score);
+                WasGoal = true;
+                StartCoroutine(ResetBall());
+            }
+        }
+    }
+
+    private IEnumerator ResetBall()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        WasGoal = false;
+        rb.position = new Vector3(0.67F, -1.54F, -1.13F);
+        if (Input.GetMouseButtonUp(1) && !gameStarted)
+        {
+            gameStarted = true;
+            this.GetComponent<Rigidbody2D>().velocity = new Vector2(4, 5);
+        }
+    }
+
 }
