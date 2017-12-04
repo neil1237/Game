@@ -33,7 +33,7 @@ public class Ball : MonoBehaviour {
                 WasGoal = true;
                 StartCoroutine(ResetBall());
             }
-            else if (value.tag == "Player2Score")
+            else 
             {
                 scores.Increment(Scores.Score.Player2Score);
                 WasGoal = true;
@@ -46,11 +46,13 @@ public class Ball : MonoBehaviour {
     {
         yield return new WaitForSecondsRealtime(0.1f);
         WasGoal = false;
-        rb.position = new Vector3(0.67F, -1.54F, -1.13F);
-        if (Input.GetMouseButtonUp(1) && !gameStarted)
+        rb.position = new Vector3(0,0,0);
+        this.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        gameStarted = false;
+        if (Input.GetMouseButtonDown(0) && !gameStarted)
         {
             gameStarted = true;
-            this.GetComponent<Rigidbody2D>().velocity = new Vector2(4, 5);
+            this.GetComponent<Rigidbody2D>().velocity = new Vector2(5f, 5f);
         }
     }
 
